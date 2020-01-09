@@ -2,24 +2,21 @@
 -(BOOL)isPlaying;
 @end
 
-@interface BluetoothManager : NSObject
-+(id)sharedInstance;
--(id)connectedDevices;
+@interface AVOutputDevice : NSObject
+-(void)setCurrentBluetoothListeningMode:(NSString *)arg1;
 @end
 
-@interface BluetoothDevice
--(BOOL)magicPaired;
--(BOOL)setListeningMode:(unsigned)arg1 ;
+@interface MPAVRoute : NSObject
+-(id)logicalLeaderOutputDevice;
+@end
+
+@interface MPAVRoutingController : NSObject
+@property(readonly, nonatomic) MPAVRoute *pickedRoute;
 @end
 
 %hook SBMediaController
 -(void)_mediaRemoteNowPlayingApplicationIsPlayingDidChange:(id)arg1 {
   %orig(arg1);
-  BluetoothManager *manager = [NSClassFromString(@"BluetoothManager") sharedInstance];
-  for(BluetoothDevice *device in manager.connectedDevices){
-    if([device magicPaired]){
-      [device setListeningMode:[self isPlaying] ? 2 : 3];
-    }
-  }
+  [[[[[self valueForKey:@"_routingController"] pickedRoute] logicalLeaderOutputDevice] valueForKey:@"_avOutputDevice"] setCurrentBluetoothListeningMode:[self isPlaying] ? @"AVOutputDeviceBluetoothListeningModeActiveNoiseCancellation" : @"AVOutputDeviceBluetoothListeningModeAudioTransparency"];
 }
 %end
