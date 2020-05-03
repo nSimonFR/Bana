@@ -17,6 +17,6 @@
 %hook SBMediaController
 -(void)_mediaRemoteNowPlayingApplicationIsPlayingDidChange:(id)arg1 {
   %orig(arg1);
-  [[[[[self valueForKey:@"_routingController"] pickedRoute] logicalLeaderOutputDevice] valueForKey:@"_avOutputDevice"] setCurrentBluetoothListeningMode:[self isPlaying] ? @"AVOutputDeviceBluetoothListeningModeActiveNoiseCancellation" : @"AVOutputDeviceBluetoothListeningModeAudioTransparency"];
+  if (![self isPlaying]) [[[[[self valueForKey:@"_routingController"] pickedRoute] logicalLeaderOutputDevice] valueForKey:@"_avOutputDevice"] setCurrentBluetoothListeningMode:@"AVOutputDeviceBluetoothListeningModeAudioTransparency"];
 }
 %end

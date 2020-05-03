@@ -1,0 +1,9 @@
+Package: fr.nsimon.bana
+Name: Bana
+Depends: mobilesubstrate
+Version: 0.1.0
+Architecture: iphoneos-arm
+Description: AirPods Pro auto transparency when paused.
+Maintainer: nSimonFR
+Author: LaughingQuoll
+Section: Tweaks
